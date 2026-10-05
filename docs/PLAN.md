@@ -170,3 +170,13 @@ Each phase ends with a runnable app, passing tests, a commit, and a push.
 7. **Polish** — nutrition-label photo entry (OCR as an editable draft), responsive QA on phone/tablet/desktop, empty states, accessibility pass.
 
 Until auth lands in phase 6, the app runs as a single local demo user so the logging experience can be built and used end to end.
+
+## 10. Status (2026-10-05)
+
+All seven phases are in `main`. Notes on where the build differs from the plan above:
+
+- **Seed data**: Indian dishes are tagged `ESTIMATED` (typical recipes, labelled "Estimate"), not `IFCT`, because the IFCT 2017 tables weren't available to cite value by value. Generic ingredients use USDA reference values. Packaged products are `SAMPLE` until replaced by label or Open Food Facts data.
+- **External providers** (Open Food Facts, USDA) are implemented and unit-tested against fixture payloads; live calls weren't reachable from the build environment, so they need a smoke test with real network access.
+- **Label photo entry** runs Tesseract OCR in the browser (it downloads its language data from a CDN on first use) and only fills a draft the person checks.
+- **Camera barcode scanning** uses the browser `BarcodeDetector`; other browsers type the number.
+- Google sign-in links accounts by verified email without the Prisma adapter, keeping JWT sessions.

@@ -10,6 +10,8 @@ import { formatKcal } from "@/lib/format";
 import { caloriesFromMacros, NUTRIENT_KEYS, type NutrientKey } from "@/lib/nutrition";
 import type { CustomFoodInput } from "@/lib/queries/library";
 import type { FoodDTO } from "@/lib/types";
+import type { LabelDraft } from "@/lib/label-ocr";
+import { LabelPhotoButton } from "./label-photo";
 
 type BasisMode = "100g" | "100ml" | "serving";
 
@@ -60,6 +62,19 @@ export function CustomFoodForm({
   );
   const [fromLabel, setFromLabel] = useState(food ? food.source === "PRODUCT_LABEL" : true);
   const [showErrors, setShowErrors] = useState(false);
+  const [ocrRead, setOcrRead] = useState<NutrientKey[] | null>(null);
+
+  const applyDraft = (d: LabelDraft) => {
+    setValues((v) => ({ ...v, ...Object.fromEntries(Object.entries(d.values).map(([k, n]) => [k, str(n)])) }));
+    if (d.basis?.kind === "100ml") setMode("100ml");
+    else if (d.basis?.kind === "100g") setMode("100g");
+    else if (d.basis?.kind === "serving") {
+      setMode("serving");
+      if (d.basis.grams) setServingGrams(str(d.basis.grams));
+    }
+    setFromLabel(true);
+    setOcrRead(Object.keys(d.values) as NutrientKey[]);
+  };
 
   const parsed = Object.fromEntries(NUTRIENT_KEYS.map((k) => [k, num(values[k])])) as Record<NutrientKey, number | null>;
   const valuesPer = mode === "serving" ? num(servingGrams) : 100;
@@ -128,6 +143,16 @@ export function CustomFoodForm({
       <section>
         <SectionLabel>Nutrition</SectionLabel>
         <Panel className="mt-3 p-5">
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-5">
+            <p className="text-xs text-muted">Snap the nutrition panel and Plate will fill in what it can read.</p>
+            <LabelPhotoButton onDraft={applyDraft} />
+          </div>
+          {ocrRead ? (
+            <p role="status" className="mb-4 rounded-control bg-over-soft px-3 py-2 text-xs text-text">
+              Read {ocrRead.length} of 5 values from the photo. Check every number against the label before saving
+              {ocrRead.length < 5 ? ", and fill in the rest" : ""}.
+            </p>
+          ) : null}
           <p className="text-[13px] text-text">The label&apos;s values are per</p>
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <Segmented

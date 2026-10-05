@@ -97,9 +97,11 @@ export function MealSection({
               <MealItemRow key={i.id} item={i} onOpen={() => onOpenItem(i)} fresh={freshIds?.has(i.id)} />
             ))}
           </ul>
-          <div className="flex justify-end border-t border-border px-4 py-2">
-            <MacroLine n={total} />
-          </div>
+          {items.length > 1 ? (
+            <div className="flex justify-end border-t border-border px-4 py-2">
+              <MacroLine n={total} />
+            </div>
+          ) : null}
         </>
       ) : (
         <button

@@ -48,7 +48,7 @@ export default function LandingPage() {
             </li>
             <li className="flex gap-2">
               <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent" />
-              Every food shows its source: IFCT, USDA, product label or your own entry.
+              Every food shows its source: USDA, Open Food Facts, the product label or your own entry.
             </li>
             <li className="flex gap-2">
               <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent" />
