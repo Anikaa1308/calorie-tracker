@@ -29,11 +29,13 @@ export function FoodRow({
   onOpen,
   onQuickAdd,
   adding,
+  trailing,
 }: {
   food: FoodDTO;
   onOpen: () => void;
   onQuickAdd?: () => void;
   adding?: boolean;
+  trailing?: React.ReactNode;
 }) {
   const { label, result } = quickAmount(food);
   return (
@@ -81,6 +83,7 @@ export function FoodRow({
           <Plus className="size-4" />
         </button>
       ) : null}
+      {trailing}
     </li>
   );
 }

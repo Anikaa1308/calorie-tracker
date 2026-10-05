@@ -37,7 +37,7 @@ export function Segmented<T extends string>({
           key={o.value}
           value={o.value}
           className={cn(
-            "flex-1 rounded-[6px] font-medium text-muted transition-colors data-[state=checked]:bg-surface data-[state=checked]:text-text data-[state=checked]:shadow-[0_1px_2px_rgb(0_0_0/0.06)]",
+            "flex-1 whitespace-nowrap rounded-[6px] font-medium text-muted transition-colors data-[state=checked]:bg-surface data-[state=checked]:text-text data-[state=checked]:shadow-[0_1px_2px_rgb(0_0_0/0.06)]",
             size === "sm" ? "h-7 px-2.5 text-xs" : "h-8 px-3 text-[13px]",
           )}
         >

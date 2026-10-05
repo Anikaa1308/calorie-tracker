@@ -63,3 +63,46 @@ export const preferencesSchema = z
     name: z.string().trim().max(80).nullable(),
   })
   .partial();
+
+const nutrient = z.number().min(0).max(1000);
+export const servingSchema = z.object({
+  label: z.string().trim().min(1).max(60),
+  grams: z.number().positive().max(10_000),
+});
+
+export const customFoodSchema = z.object({
+  name: z.string().trim().min(1, "Give the food a name.").max(120),
+  brand: z.string().trim().max(80).nullable().optional(),
+  category: z.string().trim().max(60).nullable().optional(),
+  basis: z.enum(["PER_100G", "PER_100ML"]).default("PER_100G"),
+  /** Values are per this many grams (or ml) as printed on the label; normalised to per 100 server-side. */
+  valuesPer: z.number().positive().max(5000).default(100),
+  nutrients: z.object({
+    calories: z.number().min(0).max(1000 * 50),
+    protein: nutrient.max(50_000),
+    carbs: nutrient.max(50_000),
+    fat: nutrient.max(50_000),
+    fiber: nutrient.max(50_000),
+  }),
+  densityGPerMl: z.number().positive().max(3).nullable().optional(),
+  servings: z.array(servingSchema).max(10).default([]),
+  barcode: z.string().trim().regex(/^\d{6,14}$/, "Barcodes are 6 to 14 digits.").nullable().optional(),
+  fromLabel: z.boolean().default(false),
+});
+
+export const recipeSchema = z.object({
+  name: z.string().trim().min(1, "Give the recipe a name.").max(120),
+  servings: z.number().positive().max(100),
+  cookedWeightG: z.number().positive().max(50_000).nullable().optional(),
+  notes: z.string().trim().max(2000).nullable().optional(),
+  ingredients: z
+    .array(z.object({ foodId: z.string().min(1), quantity: quantitySchema, unit: unitSchema }))
+    .min(1, "Add at least one ingredient.")
+    .max(60),
+});
+
+export const weightSchema = z.object({
+  date: dateKeySchema,
+  weightKg: z.number().min(25).max(350),
+  note: z.string().trim().max(200).nullable().optional(),
+});
