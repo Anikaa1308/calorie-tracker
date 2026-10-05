@@ -2,6 +2,7 @@ import { AddFoodProvider } from "@/components/food-search/add-food-provider";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { KeyboardShortcuts } from "@/components/layout/shortcuts";
+import { ThemeSync } from "@/components/providers/theme-sync";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,6 +13,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <MobileNav />
       </div>
       <KeyboardShortcuts />
+      <ThemeSync />
     </AddFoodProvider>
   );
 }

@@ -64,7 +64,7 @@ export function ChoiceList<T extends string>({
 }) {
   return (
     <RadioGroup.Root
-      value={value}
+      value={value ?? ""}
       onValueChange={(v) => onChange(v as T)}
       aria-label={ariaLabel}
       className={cn("grid gap-2", columns === 2 && "sm:grid-cols-2")}

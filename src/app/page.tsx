@@ -19,7 +19,7 @@ export default function LandingPage() {
             <Link href="/sign-in">Sign in</Link>
           </Button>
           <Button asChild size="sm">
-            <Link href="/today">Open Plate</Link>
+            <Link href="/sign-up">Get started</Link>
           </Button>
         </nav>
       </header>
@@ -35,10 +35,10 @@ export default function LandingPage() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button asChild size="lg">
-              <Link href="/onboarding">Set up my targets</Link>
+              <Link href="/sign-up">Set up my targets</Link>
             </Button>
             <Button asChild size="lg" variant="secondary">
-              <Link href="/today">Start logging</Link>
+              <Link href="/today">I have an account</Link>
             </Button>
           </div>
           <ul className="mt-10 grid max-w-md gap-3 text-[13px] text-muted">

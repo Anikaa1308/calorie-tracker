@@ -1,5 +1,6 @@
 "use client";
 
+import { BookOpen, ChevronRight, CookingPot, Settings } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { BodyFields, draftFromProfile, parseBody, type BodyDraft } from "@/components/goals/body-fields";
@@ -43,7 +44,7 @@ export function ProfileView() {
     return (
       <PageColumn>
         <PageHeader title="Profile" />
-        <Panel>
+        <Panel className="mb-6">
           <EmptyState
             title="Set up your targets"
             body="Answer four quick questions and Plate will estimate your daily calories and macros."
@@ -54,6 +55,7 @@ export function ProfileView() {
             }
           />
         </Panel>
+        <MobileLinks />
       </PageColumn>
     );
   }
@@ -72,8 +74,19 @@ export function ProfileView() {
 
   return (
     <PageColumn>
-      <PageHeader title="Profile" description={profile.email && profile.email !== "demo@plate.local" ? profile.email : undefined} />
+      <PageHeader
+        title="Profile"
+        description={profile.email ?? undefined}
+        actions={
+          <Button asChild variant="ghost" size="icon" aria-label="Settings" className="lg:hidden">
+            <Link href="/settings">
+              <Settings />
+            </Link>
+          </Button>
+        }
+      />
       <div className="grid gap-8">
+        <MobileLinks />
         <section>
           <SectionLabel>Daily targets</SectionLabel>
           <Panel className="mt-3 p-5">
@@ -237,5 +250,25 @@ function BodySection({ profile, customTargets }: { profile: ProfileDTO; customTa
         )}
       </Panel>
     </section>
+  );
+}
+
+/** On phones the bottom bar has five slots; the rest of the app is reached from here. */
+function MobileLinks() {
+  const links = [
+    { href: "/recipes", label: "Recipes", icon: CookingPot },
+    { href: "/foods", label: "My foods", icon: BookOpen },
+    { href: "/settings", label: "Settings", icon: Settings },
+  ];
+  return (
+    <Panel className="divide-y divide-border lg:hidden">
+      {links.map(({ href, label, icon: Icon }) => (
+        <Link key={href} href={href} className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-subtle/60">
+          <Icon className="size-4 text-muted" strokeWidth={1.75} />
+          <span className="flex-1">{label}</span>
+          <ChevronRight className="size-4 text-faint" />
+        </Link>
+      ))}
+    </Panel>
   );
 }

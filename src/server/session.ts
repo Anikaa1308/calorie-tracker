@@ -1,22 +1,15 @@
 import "server-only";
+import { auth } from "./auth";
 import { db } from "./db";
+import { HttpError } from "./http";
 
-/**
- * The signed-in user's id. Until accounts land this is a single local demo
- * user, so the logging experience works end to end.
- */
-export const DEMO_USER_ID = "demo-user";
-
-let ensured = false;
-
+/** The signed-in user's id, or a 401 for API routes. */
 export async function requireUserId(): Promise<string> {
-  if (!ensured) {
-    await db.user.upsert({
-      where: { id: DEMO_USER_ID },
-      create: { id: DEMO_USER_ID, email: "demo@plate.local", name: "Demo" },
-      update: {},
-    });
-    ensured = true;
-  }
-  return DEMO_USER_ID;
+  const session = await auth();
+  const id = session?.user?.id;
+  if (!id) throw new HttpError(401, "Please sign in.");
+  // A token can outlive its account (e.g. after deletion).
+  const exists = await db.user.findUnique({ where: { id }, select: { id: true } });
+  if (!exists) throw new HttpError(401, "Please sign in.");
+  return id;
 }

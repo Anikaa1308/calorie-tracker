@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, X } from "lucide-react";
+import { ScanBarcode, Search, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { EmptyState, Skeleton } from "@/components/ui/misc";
@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFoodSearch, useLibrary, type LibraryTab } from "@/lib/queries/foods";
 import type { FoodDTO } from "@/lib/types";
 import { cn } from "@/lib/cn";
+import { BarcodeScanner } from "./barcode-scanner";
 import { FoodRow } from "./food-row";
 
 const TABS: { value: LibraryTab; label: string; empty: string; body: string }[] = [
@@ -109,6 +110,7 @@ export function SearchPanel({
 }) {
   const [query, setQuery] = useState("");
   const [tab, setTab] = useState<LibraryTab>("recent");
+  const [scanning, setScanning] = useState(false);
   const search = useFoodSearch(query);
   const q = query.trim();
 
@@ -124,19 +126,40 @@ export function SearchPanel({
           placeholder="Search foods, brands, meals..."
           aria-label="Search foods"
           autoComplete="off"
-          className="h-11 w-full rounded-control border border-border bg-surface pr-9 pl-9 text-base placeholder:text-faint focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none sm:text-sm [&::-webkit-search-cancel-button]:hidden"
+          className="h-11 w-full rounded-control border border-border bg-surface pr-18 pl-9 text-base placeholder:text-faint focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none sm:text-sm [&::-webkit-search-cancel-button]:hidden"
         />
-        {query ? (
+        <div className="absolute top-1/2 right-1.5 flex -translate-y-1/2 items-center">
+          {query ? (
+            <button
+              type="button"
+              onClick={() => setQuery("")}
+              aria-label="Clear search"
+              className="flex size-8 items-center justify-center rounded-full text-faint hover:bg-subtle hover:text-text"
+            >
+              <X className="size-3.5" />
+            </button>
+          ) : null}
           <button
             type="button"
-            onClick={() => setQuery("")}
-            aria-label="Clear search"
-            className="absolute top-1/2 right-2 flex size-7 -translate-y-1/2 items-center justify-center rounded-full text-faint hover:bg-subtle hover:text-text"
+            onClick={() => setScanning((s) => !s)}
+            aria-label="Scan a barcode"
+            aria-pressed={scanning}
+            className="flex size-8 items-center justify-center rounded-control text-muted hover:bg-subtle hover:text-text aria-pressed:text-accent"
           >
-            <X className="size-3.5" />
+            <ScanBarcode className="size-4" />
           </button>
-        ) : null}
+        </div>
       </div>
+      {scanning ? (
+        <div className="mt-3">
+          <BarcodeScanner
+            onFound={(f) => {
+              setScanning(false);
+              onPick(f);
+            }}
+          />
+        </div>
+      ) : null}
 
       {q ? (
         <div className="mt-2" aria-live="polite" aria-busy={search.isFetching}>

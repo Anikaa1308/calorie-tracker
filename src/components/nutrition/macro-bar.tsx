@@ -28,11 +28,11 @@ export function MacroBar({
   return (
     <div className={cn("min-w-0", className)}>
       <div className="flex items-baseline justify-between gap-2 text-[13px]">
-        <span className="flex items-center gap-1.5 text-muted">
+        <span className="flex min-w-0 items-center gap-1.5 truncate text-muted">
           <span className="size-2 rounded-full" style={{ background: MACRO_COLOR[nutrient] }} aria-hidden />
           {label}
         </span>
-        <span className="tabular">
+        <span className="tabular whitespace-nowrap">
           <span className="font-medium text-text">{formatNutrient(nutrient, consumed)}</span>
           {hasTarget ? <span className="text-faint"> / {target} g</span> : <span className="text-faint"> g</span>}
         </span>

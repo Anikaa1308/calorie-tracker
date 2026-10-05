@@ -6,6 +6,7 @@ import type { MealItem } from "@/generated/prisma/client";
 import { db } from "../db";
 import { badRequest, notFound } from "../http";
 import { getFood } from "../food-data/local";
+import { resolveFood } from "../food-data/import";
 import { getGoalForDate } from "./goals";
 
 function itemToDTO(i: MealItem): MealItemDTO {
@@ -73,7 +74,7 @@ export async function addItem(
   userId: string,
   input: { date: DateKey; meal: MealTypeCode; foodId: string; quantity: number; unit: string },
 ): Promise<MealItemDTO> {
-  const food = await getFood(input.foodId, userId);
+  const food = await resolveFood(input.foodId, userId);
   if (!food) throw notFound("Food not found.");
   const { grams, nutrients } = computeSnapshot(food, input.quantity, input.unit);
   const date = dateKeyToDb(input.date);
