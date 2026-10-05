@@ -1,0 +1,376 @@
+// Plate — data model. See docs/PLAN.md §3.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ── Accounts (Auth.js) ──────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  passwordHash  String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  profile       Profile?
+  goals         DailyGoal[]
+  foods         Food[]          @relation("OwnedFoods")
+  recipes       Recipe[]
+  meals         Meal[]
+  daily         DailyNutrition[]
+  weights       WeightEntry[]
+  favorites     FavoriteFood[]
+  history       FoodHistory[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ── Profile & goals ─────────────────────────────────────────────────────────
+
+enum Sex {
+  MALE
+  FEMALE
+}
+
+enum ActivityLevel {
+  SEDENTARY
+  LIGHT
+  MODERATE
+  VERY
+  EXTREME
+}
+
+enum Goal {
+  LOSE
+  MAINTAIN
+  GAIN
+  BUILD_MUSCLE
+  RECOMP
+}
+
+enum Rate {
+  SLOW
+  MODERATE
+  AGGRESSIVE
+}
+
+enum WeightUnit {
+  KG
+  LB
+}
+
+enum HeightUnit {
+  CM
+  FT_IN
+}
+
+model Profile {
+  userId        String         @id
+  sex           Sex?
+  birthDate     DateTime?      @db.Date
+  heightCm      Float?
+  weightKg      Float?
+  goalWeightKg  Float?
+  activityLevel ActivityLevel?
+  goal          Goal?
+  rate          Rate?
+  weightUnit    WeightUnit     @default(KG)
+  heightUnit    HeightUnit     @default(CM)
+  theme         String         @default("system")
+  onboardedAt   DateTime?
+  updatedAt     DateTime       @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+/// A new row each time targets change, so history compares against the goal that applied that day.
+model DailyGoal {
+  id            String   @id @default(cuid())
+  userId        String
+  effectiveFrom DateTime @db.Date
+  calories      Int
+  protein       Int
+  carbs         Int
+  fat           Int
+  fiber         Int
+  isCustom      Boolean  @default(false)
+  recCalories   Int?
+  recProtein    Int?
+  recCarbs      Int?
+  recFat        Int?
+  recFiber      Int?
+  createdAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, effectiveFrom])
+  @@index([userId, effectiveFrom(sort: Desc)])
+}
+
+// ── Foods ───────────────────────────────────────────────────────────────────
+
+enum FoodKind {
+  GENERIC
+  BRANDED
+  USER
+  RECIPE
+}
+
+enum NutritionBasis {
+  PER_100G
+  PER_100ML
+}
+
+enum FoodSource {
+  USDA
+  OPEN_FOOD_FACTS
+  IFCT
+  PRODUCT_LABEL
+  USER
+  ESTIMATED
+  SAMPLE
+}
+
+enum Confidence {
+  VERIFIED
+  HIGH
+  MEDIUM
+  LOW
+}
+
+model Brand {
+  id    String @id @default(cuid())
+  name  String
+  slug  String @unique
+  foods Food[]
+}
+
+model Food {
+  id             String         @id @default(cuid())
+  name           String
+  brandId        String?
+  category       String?
+  kind           FoodKind       @default(GENERIC)
+  basis          NutritionBasis @default(PER_100G)
+  densityGPerMl  Float?
+  source         FoodSource
+  confidence     Confidence     @default(HIGH)
+  sourceNote     String?
+  externalId     String?
+  barcode        String?
+  ownerId        String?
+  popularity     Int            @default(0)
+  aliases        String[]       @default([])
+  /// Lower-cased "brand name aliases" used for trigram search.
+  searchText     String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  archivedAt     DateTime?
+
+  brand       Brand?           @relation(fields: [brandId], references: [id])
+  owner       User?            @relation("OwnedFoods", fields: [ownerId], references: [id], onDelete: Cascade)
+  nutrition   FoodNutrition?
+  servings    FoodServing[]
+  recipe      Recipe?
+  mealItems   MealItem[]
+  ingredientOf RecipeIngredient[]
+  favorites   FavoriteFood[]
+  history     FoodHistory[]
+
+  @@unique([source, externalId])
+  @@index([barcode])
+  @@index([ownerId])
+}
+
+model FoodNutrition {
+  foodId       String @id
+  calories     Float
+  protein      Float
+  carbs        Float
+  fat          Float
+  fiber        Float
+  sugar        Float?
+  saturatedFat Float?
+  sodiumMg     Float?
+
+  food Food @relation(fields: [foodId], references: [id], onDelete: Cascade)
+}
+
+model FoodServing {
+  id        String  @id @default(cuid())
+  foodId    String
+  label     String
+  unit      String
+  grams     Float
+  isDefault Boolean @default(false)
+  position  Int     @default(0)
+
+  food Food @relation(fields: [foodId], references: [id], onDelete: Cascade)
+
+  @@index([foodId])
+}
+
+// ── Recipes ─────────────────────────────────────────────────────────────────
+
+model Recipe {
+  id           String   @id @default(cuid())
+  ownerId      String
+  name         String
+  servings     Float
+  totalWeightG Float?
+  notes        String?
+  foodId       String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  owner       User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  food        Food               @relation(fields: [foodId], references: [id], onDelete: Cascade)
+  ingredients RecipeIngredient[]
+}
+
+model RecipeIngredient {
+  id       String @id @default(cuid())
+  recipeId String
+  foodId   String
+  quantity Float
+  unit     String
+  grams    Float
+  position Int    @default(0)
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  food   Food   @relation(fields: [foodId], references: [id])
+}
+
+// ── Diary ───────────────────────────────────────────────────────────────────
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACKS
+}
+
+model Meal {
+  id     String   @id @default(cuid())
+  userId String
+  date   DateTime @db.Date
+  type   MealType
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items MealItem[]
+
+  @@unique([userId, date, type])
+}
+
+/// Logged items are snapshots: editing a food later never rewrites history.
+model MealItem {
+  id        String   @id @default(cuid())
+  mealId    String
+  foodId    String?
+  quantity  Float
+  unit      String
+  grams     Float
+  calories  Float
+  protein   Float
+  carbs     Float
+  fat       Float
+  fiber     Float
+  foodName  String
+  brandName String?
+  source    FoodSource
+  createdAt DateTime @default(now())
+
+  meal Meal  @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  food Food? @relation(fields: [foodId], references: [id], onDelete: SetNull)
+
+  @@index([mealId])
+}
+
+model DailyNutrition {
+  userId    String
+  date      DateTime @db.Date
+  calories  Float    @default(0)
+  protein   Float    @default(0)
+  carbs     Float    @default(0)
+  fat       Float    @default(0)
+  fiber     Float    @default(0)
+  itemCount Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, date])
+}
+
+model WeightEntry {
+  id       String   @id @default(cuid())
+  userId   String
+  date     DateTime @db.Date
+  weightKg Float
+  note     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+}
+
+model FavoriteFood {
+  userId    String
+  foodId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  food Food @relation(fields: [foodId], references: [id], onDelete: Cascade)
+
+  @@id([userId, foodId])
+}
+
+model FoodHistory {
+  userId       String
+  foodId       String
+  timesLogged  Int      @default(0)
+  lastUsedAt   DateTime
+  lastQuantity Float
+  lastUnit     String
+  lastMeal     MealType?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  food Food @relation(fields: [foodId], references: [id], onDelete: Cascade)
+
+  @@id([userId, foodId])
+  @@index([userId, lastUsedAt(sort: Desc)])
+}
