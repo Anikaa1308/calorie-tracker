@@ -72,3 +72,20 @@ export interface GoalDTO {
   effectiveFrom: string;
   recommended: Nutrients | null;
 }
+
+export interface ProfileDTO {
+  sex: "MALE" | "FEMALE" | null;
+  age: number | null;
+  heightCm: number | null;
+  weightKg: number | null;
+  goalWeightKg: number | null;
+  activityLevel: "SEDENTARY" | "LIGHT" | "MODERATE" | "VERY" | "EXTREME" | null;
+  goal: "LOSE" | "MAINTAIN" | "GAIN" | "BUILD_MUSCLE" | "RECOMP" | null;
+  rate: "SLOW" | "MODERATE" | "AGGRESSIVE" | null;
+  weightUnit: "KG" | "LB";
+  heightUnit: "CM" | "FT_IN";
+  theme: string;
+  onboarded: boolean;
+  name: string | null;
+  email: string | null;
+}
