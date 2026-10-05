@@ -314,6 +314,8 @@ model MealItem {
   brandName String?
   source    FoodSource
   createdAt DateTime @default(now())
+  /// Soft delete so "Undo" can restore the exact snapshot.
+  deletedAt DateTime?
 
   meal Meal  @relation(fields: [mealId], references: [id], onDelete: Cascade)
   food Food? @relation(fields: [foodId], references: [id], onDelete: SetNull)
