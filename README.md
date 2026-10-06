@@ -15,6 +15,20 @@ npm run db:setup              # apply migrations and seed ~110 foods
 npm run dev                   # http://localhost:3000
 ```
 
+## Put it online (Vercel + Neon)
+
+The repo is ready for [Vercel](https://vercel.com) with a free [Neon](https://neon.tech) Postgres database. Each deploy runs `npm run vercel-build`, which applies migrations, seeds the food database (safe to repeat) and builds the app.
+
+1. Sign in to Vercel with GitHub, choose **Add New → Project** and import `calorie-tracker`.
+2. Under **Environment Variables** add `AUTH_SECRET` (any long random string, e.g. from `openssl rand -base64 33`) and click **Deploy**. This first deploy fails because there is no database yet.
+3. In the project, open **Storage → Create Database → Neon**, create it and connect it to the project. This adds `DATABASE_URL` and `DATABASE_URL_UNPOOLED`.
+4. Open **Deployments**, choose the latest one and click **Redeploy**.
+
+Optional extras (add under **Settings → Environment Variables**, then redeploy):
+
+- `USDA_API_KEY` for USDA search (free key from api.data.gov).
+- `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` for Google sign-in. In Google Cloud Console, create an OAuth client of type "Web application" with redirect URI `https://<your-app>.vercel.app/api/auth/callback/google`.
+
 ## Scripts
 
 | Command | What it does |
