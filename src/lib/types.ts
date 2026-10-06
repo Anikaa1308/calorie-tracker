@@ -38,6 +38,8 @@ export interface FoodDTO {
   per100: Nutrients | null;
   servings: ServingLike[];
   isOwn?: boolean;
+  /** For foods people added: "you", the adder's name, or "another member". */
+  addedBy?: string | null;
   isFavorite?: boolean;
   last?: { quantity: number; unit: string } | null;
 }

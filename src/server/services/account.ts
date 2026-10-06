@@ -38,7 +38,14 @@ export async function exportAllJson(userId: string) {
   return { exportedAt: new Date().toISOString(), user, profile, goals, meals, weights, foods, recipes, favorites };
 }
 
-/** Deletes the user and everything they own (cascades in the schema). */
+/**
+ * Deletes the user and everything they own (cascades in the schema). Foods
+ * they added to the shared list are kept without their name, because other
+ * people may log them or use them in recipes.
+ */
 export async function deleteAccount(userId: string) {
-  await db.user.delete({ where: { id: userId } });
+  await db.$transaction([
+    db.food.updateMany({ where: { ownerId: userId, kind: "USER" }, data: { ownerId: null } }),
+    db.user.delete({ where: { id: userId } }),
+  ]);
 }

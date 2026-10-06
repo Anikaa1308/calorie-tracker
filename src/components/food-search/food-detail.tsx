@@ -88,6 +88,11 @@ export function FoodDetail({
       <div className="mt-2 rounded-control bg-subtle px-3 py-2">
         <SourceBadge source={food.source} confidence={food.confidence} withPrefix />
         <p className="mt-1 text-xs text-muted">{food.sourceNote ?? sourceHint(food.source)}</p>
+        {food.addedBy ? (
+          <p className="mt-1 text-xs text-muted">
+            {food.isOwn ? "You added this, and everyone using Plate can find it." : `Added by ${food.addedBy}. Only they can edit it.`}
+          </p>
+        ) : null}
       </div>
 
       {food.per100 ? (

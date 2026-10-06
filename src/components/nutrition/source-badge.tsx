@@ -16,7 +16,7 @@ const SOURCE_HINT: Record<FoodSourceCode, string> = {
   OPEN_FOOD_FACTS: "From Open Food Facts, a community database of product labels. Check the pack if it matters.",
   IFCT: "Indian Food Composition Tables (NIN, 2017).",
   PRODUCT_LABEL: "Taken from the product's nutrition label.",
-  USER: "Entered by you.",
+  USER: "Entered by someone using Plate.",
   ESTIMATED: "Typical values for a home-style recipe. Your version may differ.",
   SAMPLE: "Sample values that haven't been checked against the pack. Use the label for accuracy.",
 };

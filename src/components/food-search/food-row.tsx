@@ -57,6 +57,7 @@ export function FoodRow({
               {result ? ` · ${formatQuantity(result.grams)} g` : ""}
             </span>
             <SourceBadge source={food.source} confidence={food.confidence} className="shrink-0" />
+            {food.addedBy && !food.isOwn ? <span className="min-w-0 truncate text-faint">by {food.addedBy}</span> : null}
           </p>
         </div>
         <div className="shrink-0 text-right">

@@ -246,6 +246,7 @@ export function CustomFoodForm({
           </Button>
         ) : null}
       </div>
+      <p className="-mt-2 text-xs text-muted">Foods you add are shared, so everyone using Plate can find and log them. Only you can edit or delete them.</p>
     </form>
   );
 }
