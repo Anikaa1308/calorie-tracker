@@ -5,7 +5,7 @@ export function SectionLabel({ children, className }: { children: React.ReactNod
 }
 
 export function Panel({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("rounded-panel border border-border bg-surface", className)} {...props} />;
+  return <div className={cn("rounded-panel border border-border/70 bg-surface", className)} {...props} />;
 }
 
 export function EmptyState({

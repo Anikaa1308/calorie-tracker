@@ -9,7 +9,7 @@ export const TabsContent = T.Content;
 export function TabsList({ className, ...props }: React.ComponentProps<typeof T.List>) {
   return (
     <T.List
-      className={cn("flex gap-1 overflow-x-auto border-b border-border [scrollbar-width:none]", className)}
+      className={cn("flex gap-1.5 overflow-x-auto [scrollbar-width:none]", className)}
       {...props}
     />
   );
@@ -19,7 +19,7 @@ export function TabsTrigger({ className, ...props }: React.ComponentProps<typeof
   return (
     <T.Trigger
       className={cn(
-        "-mb-px shrink-0 border-b-2 border-transparent px-2.5 pt-1 pb-2.5 text-[13px] font-medium text-muted transition-colors hover:text-text data-[state=active]:border-text data-[state=active]:text-text",
+        "h-9 shrink-0 rounded-full bg-pill px-4 text-[13px] font-semibold text-muted transition-colors hover:text-text data-[state=active]:bg-accent data-[state=active]:text-accent-contrast",
         className,
       )}
       {...props}

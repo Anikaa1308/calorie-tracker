@@ -28,7 +28,7 @@ export function AuthForm({ mode, next, google }: { mode: "sign-in" | "sign-up"; 
     <div className="flex min-h-dvh flex-col items-center px-4 pt-16 pb-10 sm:pt-24">
       <Logo />
       <div className="mt-8 w-full max-w-sm rounded-panel border border-border bg-surface p-6">
-        <h1 className="text-lg font-semibold tracking-tight">{isIn ? "Sign in" : "Create your account"}</h1>
+        <h1 className="text-lg font-bold tracking-tight">{isIn ? "Sign in" : "Create your account"}</h1>
         <p className="mt-1 text-[13px] text-muted">{isIn ? "Welcome back." : "Free, and your data stays yours."}</p>
 
         {google ? (

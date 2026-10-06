@@ -30,7 +30,7 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
   return (
     <div className="min-w-0">
       <p className="text-xs text-muted">{label}</p>
-      <p className="tabular mt-1 text-[20px] leading-tight font-semibold tracking-tight">{value}</p>
+      <p className="tabular mt-1 text-[20px] leading-tight font-bold tracking-tight">{value}</p>
       {sub ? <p className="mt-0.5 truncate text-xs text-faint">{sub}</p> : null}
     </div>
   );
@@ -91,13 +91,13 @@ export function HistoryView() {
                 <div className="mt-6">
                   <div className="mb-2 flex items-center gap-4 text-xs text-muted">
                     <span className="flex items-center gap-1.5">
-                      <span className="size-2 rounded-sm bg-accent" /> Calories
+                      <span className="size-2.5 rounded-full bg-sage" /> Calories
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <span className="size-2 rounded-sm bg-over" /> Over target
+                      <span className="size-2.5 rounded-full bg-over" /> Over target
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <span className="h-px w-3 bg-muted" /> Target
+                      <span className="w-3 border-t border-dashed border-muted" /> Target
                     </span>
                   </div>
                   <CaloriesChart days={days} />

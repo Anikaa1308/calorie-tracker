@@ -48,7 +48,7 @@ export function SourceBadge({
       )}
     >
       <span
-        className={cn("size-1.5 rounded-full", uncertain ? "bg-over" : "bg-accent")}
+        className={cn("size-1.5 rounded-full", uncertain ? "bg-over" : "bg-sage")}
         aria-hidden
       />
       {withPrefix ? "Nutrition data: " : ""}

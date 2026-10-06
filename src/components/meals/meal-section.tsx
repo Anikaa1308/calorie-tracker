@@ -1,7 +1,7 @@
 "use client";
 
 import { DropdownMenu } from "radix-ui";
-import { Copy, MoreHorizontal, Plus } from "lucide-react";
+import { Apple, Coffee, Copy, Moon, MoreHorizontal, Plus, Soup, type LucideIcon } from "lucide-react";
 import { describeQuantity } from "@/components/food-search/food-row";
 import { MacroLine } from "@/components/nutrition/macro-line";
 import { Button } from "@/components/ui/button";
@@ -11,13 +11,20 @@ import { MEAL_LABEL, type MealItemDTO, type MealTypeCode } from "@/lib/types";
 
 const describeAmount = (i: MealItemDTO) => describeQuantity(i.quantity, i.unit);
 
+const MEAL_BADGE: Record<MealTypeCode, { icon: LucideIcon; color: string }> = {
+  BREAKFAST: { icon: Coffee, color: "var(--butter)" },
+  LUNCH: { icon: Soup, color: "var(--sage)" },
+  DINNER: { icon: Moon, color: "var(--periwinkle)" },
+  SNACKS: { icon: Apple, color: "var(--pink)" },
+};
+
 export function MealItemRow({ item, onOpen, fresh }: { item: MealItemDTO; onOpen: () => void; fresh?: boolean }) {
   return (
     <li className={fresh ? "animate-row-added" : undefined}>
       <button
         type="button"
         onClick={onOpen}
-        className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-subtle/60"
+        className="flex w-full items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-subtle/60"
       >
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm text-text">{item.foodName}</p>
@@ -28,7 +35,7 @@ export function MealItemRow({ item, onOpen, fresh }: { item: MealItemDTO; onOpen
           </p>
         </div>
         <div className="shrink-0 text-right">
-          <p className="tabular text-sm">{formatKcal(item.nutrients.calories)}</p>
+          <p className="tabular text-sm font-semibold">{formatKcal(item.nutrients.calories)}</p>
           <MacroLine n={item.nutrients} className="hidden sm:inline" />
         </div>
       </button>
@@ -52,11 +59,19 @@ export function MealSection({
   freshIds?: ReadonlySet<string>;
 }) {
   const total = sumNutrients(items.map((i) => i.nutrients));
+  const { icon: Icon, color } = MEAL_BADGE[meal];
   return (
-    <section aria-labelledby={`meal-${meal}`} className="rounded-panel border border-border bg-surface">
-      <header className="flex items-center gap-2 py-2.5 pr-2 pl-4">
-        <div className="flex min-w-0 flex-1 items-baseline gap-2">
-          <h2 id={`meal-${meal}`} className="text-sm font-semibold">
+    <section aria-labelledby={`meal-${meal}`} className="overflow-hidden rounded-panel border border-border/70 bg-surface">
+      <header className="flex items-center gap-2 py-3 pr-3 pl-3.5">
+        <span
+          aria-hidden
+          className="flex size-9 shrink-0 items-center justify-center rounded-full text-on-pastel"
+          style={{ background: color }}
+        >
+          <Icon className="size-4" strokeWidth={1.75} />
+        </span>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <h2 id={`meal-${meal}`} className="text-[15px] leading-tight font-bold">
             {MEAL_LABEL[meal]}
           </h2>
           {items.length ? (
@@ -73,11 +88,11 @@ export function MealSection({
             <DropdownMenu.Content
               align="end"
               sideOffset={4}
-              className="animate-fade-in z-50 min-w-48 rounded-control border border-border bg-surface p-1 shadow-float"
+              className="animate-fade-in z-50 min-w-48 rounded-control border border-border bg-surface p-1.5 shadow-float"
             >
               <DropdownMenu.Item
                 onSelect={onCopyFromYesterday}
-                className="flex cursor-pointer items-center gap-2 rounded-[6px] px-2.5 py-2 text-[13px] outline-none data-[highlighted]:bg-subtle"
+                className="flex cursor-pointer items-center gap-2 rounded-[10px] px-2.5 py-2 text-[13px] outline-none data-[highlighted]:bg-subtle"
               >
                 <Copy className="size-3.5 text-muted" />
                 Copy from previous day
@@ -85,9 +100,8 @@ export function MealSection({
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
-        <Button variant="ghost" size="sm" onClick={onAdd} aria-label={`Add food to ${MEAL_LABEL[meal]}`}>
+        <Button variant="subtle" size="icon-sm" onClick={onAdd} aria-label={`Add food to ${MEAL_LABEL[meal]}`}>
           <Plus />
-          Add
         </Button>
       </header>
       {items.length ? (
@@ -98,7 +112,7 @@ export function MealSection({
             ))}
           </ul>
           {items.length > 1 ? (
-            <div className="flex justify-end border-t border-border px-4 py-2">
+            <div className="flex justify-end border-t border-border px-5 py-2.5">
               <MacroLine n={total} />
             </div>
           ) : null}
@@ -107,7 +121,7 @@ export function MealSection({
         <button
           type="button"
           onClick={onAdd}
-          className="w-full border-t border-dashed border-border px-4 py-3 text-left text-[13px] text-faint transition-colors hover:text-muted"
+          className="w-full border-t border-dashed border-border-strong/70 px-5 py-3 text-left text-[13px] text-faint transition-colors hover:text-muted"
         >
           Nothing logged yet
         </button>

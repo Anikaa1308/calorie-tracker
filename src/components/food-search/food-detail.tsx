@@ -61,7 +61,7 @@ export function FoodDetail({
     >
       <div className="flex items-start gap-2">
         {onBack ? (
-          <Button variant="ghost" size="icon-sm" onClick={onBack} aria-label="Back to results" className="-ml-2">
+          <Button variant="dashed" size="icon-sm" onClick={onBack} aria-label="Back to results">
             <ArrowLeft />
           </Button>
         ) : null}
@@ -101,7 +101,7 @@ export function FoodDetail({
               <>
                 <div className="flex items-baseline justify-between">
                   <p>
-                    <span className="tabular text-[28px] leading-none font-semibold tracking-tight">
+                    <span className="tabular text-[28px] leading-none font-bold tracking-tight">
                       {formatKcal(result.nutrients.calories)}
                     </span>{" "}
                     <span className="text-muted">kcal</span>

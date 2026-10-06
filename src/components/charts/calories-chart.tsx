@@ -17,7 +17,7 @@ function TooltipBody({ active, payload }: { active?: boolean; payload?: { payloa
   if (!active || !payload?.length) return null;
   const p = payload[0].payload;
   return (
-    <div className="rounded-control border border-border bg-surface px-3 py-2 text-xs shadow-float">
+    <div className="rounded-[16px] border border-border bg-surface px-3.5 py-2.5 text-xs shadow-float">
       <p className="font-medium text-text">
         {parseDateKey(p.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
       </p>
@@ -66,9 +66,9 @@ export function CaloriesChart({ days }: { days: HistoryDay[] }) {
             width={44}
           />
           <Tooltip content={<TooltipBody />} cursor={{ fill: "var(--subtle)" }} />
-          <Bar dataKey="calories" maxBarSize={24} radius={[4, 4, 0, 0]} isAnimationActive={false}>
+          <Bar dataKey="calories" maxBarSize={24} radius={[12, 12, 12, 12]} isAnimationActive={false}>
             {data.map((d) => (
-              <Cell key={d.date} fill={d.over ? "var(--over)" : "var(--accent)"} />
+              <Cell key={d.date} fill={d.over ? "var(--over)" : "var(--sage)"} />
             ))}
           </Bar>
           <Line
@@ -76,6 +76,7 @@ export function CaloriesChart({ days }: { days: HistoryDay[] }) {
             type="stepAfter"
             stroke="var(--muted)"
             strokeWidth={1.5}
+            strokeDasharray="4 4"
             dot={false}
             activeDot={false}
             isAnimationActive={false}

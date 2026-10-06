@@ -78,7 +78,7 @@ export function FoodRow({
           onClick={onQuickAdd}
           disabled={adding}
           aria-label={`Add ${label} of ${food.name}`}
-          className="flex size-8 shrink-0 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-accent hover:bg-accent hover:text-accent-contrast disabled:opacity-50"
+          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-pill text-text transition-colors hover:bg-accent hover:text-accent-contrast disabled:opacity-50"
         >
           <Plus className="size-4" />
         </button>

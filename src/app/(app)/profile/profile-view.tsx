@@ -225,7 +225,7 @@ function BodySection({ profile, customTargets }: { profile: ProfileDTO; customTa
               ) : null}
             </div>
             {confirm ? (
-              <div className="mt-5 rounded-panel border border-accent/40 bg-accent-soft/60 p-4">
+              <div className="mt-5 rounded-panel border border-butter bg-accent-soft/60 p-4">
                 <p className="text-[13px] font-medium">You have custom targets. Update them to the new recommendation?</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <Button size="sm" onClick={() => submit(true)} disabled={save.isPending}>
