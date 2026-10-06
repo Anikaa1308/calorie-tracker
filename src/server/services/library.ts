@@ -1,4 +1,5 @@
 import "server-only";
+import { visibleFoodWhere } from "@/lib/food-sharing";
 import type { FoodDTO } from "@/lib/types";
 import { db } from "../db";
 import { foodInclude, toFoodDTO } from "../food-data/mappers";
@@ -13,7 +14,7 @@ export async function getLibrary(userId: string, tab: LibraryTab, limit = 40): P
   const favSet = new Set(favorites.map((f) => f.foodId));
   const last = new Map(history.map((h) => [h.foodId, { quantity: h.lastQuantity, unit: h.lastUnit }]));
   const ctx = { userId, favorites: favSet, last };
-  const visible = { archivedAt: null, OR: [{ ownerId: null }, { ownerId: userId }] };
+  const visible = { archivedAt: null, ...visibleFoodWhere(userId) };
 
   if (tab === "recent" || tab === "frequent") {
     const rows = await db.foodHistory.findMany({

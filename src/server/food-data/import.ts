@@ -1,4 +1,5 @@
 import "server-only";
+import { visibleFoodWhere } from "@/lib/food-sharing";
 import type { FoodDTO } from "@/lib/types";
 import { db } from "../db";
 import { badRequest, notFound } from "../http";
@@ -60,10 +61,13 @@ export async function resolveFood(id: string, userId: string): Promise<FoodDTO |
 }
 
 export async function lookupBarcode(code: string, userId: string): Promise<FoodDTO | null> {
-  const local = await db.food.findFirst({
-    where: { barcode: code, archivedAt: null, OR: [{ ownerId: null }, { ownerId: userId }] },
-    orderBy: { ownerId: { sort: "desc", nulls: "last" } },
+  // Your own entry first, then anything someone else added, then the catalogue.
+  const matches = await db.food.findMany({
+    where: { barcode: code, archivedAt: null, ...visibleFoodWhere(userId) },
+    select: { id: true, ownerId: true },
+    orderBy: { updatedAt: "desc" },
   });
+  const local = matches.find((f) => f.ownerId === userId) ?? matches.find((f) => f.ownerId) ?? matches[0];
   if (local) return getFood(local.id, userId);
   return getOpenFoodFactsProduct(code);
 }

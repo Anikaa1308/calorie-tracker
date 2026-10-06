@@ -1,10 +1,11 @@
 import "server-only";
 import { rankFoods, tokenize, type HistoryInfo } from "@/lib/food-search";
+import { visibleFoodWhere } from "@/lib/food-sharing";
 import type { FoodDTO } from "@/lib/types";
 import { db } from "../db";
 import { foodInclude, toFoodDTO } from "./mappers";
 
-/** Candidate ids from Postgres: every token matches, or the whole query is trigram-similar. */
+/** Candidate ids from Postgres: every token matches, or the whole query is trigram-similar. Mirrors visibleFoodWhere. */
 async function candidateIds(query: string, userId: string, limit: number): Promise<string[]> {
   const tokens = tokenize(query);
   if (!tokens.length) return [];
@@ -13,7 +14,7 @@ async function candidateIds(query: string, userId: string, limit: number): Promi
   const rows = await db.$queryRaw<{ id: string }[]>`
     SELECT id FROM "Food"
     WHERE "archivedAt" IS NULL
-      AND ("ownerId" IS NULL OR "ownerId" = ${userId})
+      AND ("ownerId" IS NULL OR "ownerId" = ${userId} OR "kind" = 'USER')
       AND ("searchText" ILIKE ALL(${patterns}::text[]) OR word_similarity(${q}, "searchText") > 0.45)
     ORDER BY word_similarity(${q}, "searchText") DESC, popularity DESC
     LIMIT ${limit}`;
@@ -45,7 +46,7 @@ export async function searchLocalFoods(query: string, userId: string, limit = 25
 
 export async function getFood(id: string, userId: string): Promise<FoodDTO | null> {
   const f = await db.food.findFirst({
-    where: { id, OR: [{ ownerId: null }, { ownerId: userId }] },
+    where: { id, ...visibleFoodWhere(userId) },
     include: foodInclude,
   });
   if (!f) return null;

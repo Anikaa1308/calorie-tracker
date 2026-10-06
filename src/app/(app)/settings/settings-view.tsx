@@ -140,7 +140,7 @@ export function SettingsView() {
           setDeleteError(null);
         }}
         title="Delete your account?"
-        description="This permanently deletes your diary, targets, weights, foods and recipes. It can't be undone. Export first if you want a copy."
+        description="This permanently deletes your diary, targets, weights, foods and recipes. It can't be undone. Foods you added to the shared list stay for others, without your name. Export first if you want a copy."
       >
         <form
           onSubmit={async (e) => {
