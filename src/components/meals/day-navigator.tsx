@@ -11,10 +11,10 @@ export function DayNavigator({ date, onChange }: { date: string; onChange: (d: s
     <div className="flex items-center justify-between gap-3">
       <div className="min-w-0">
         <p className="label-caps">{isToday ? "Today" : date === addDays(today, -1) ? "Yesterday" : " "}</p>
-        <h1 className="mt-1 truncate text-[20px] font-semibold tracking-tight sm:text-[24px]">{formatDayLong(date)}</h1>
+        <h1 className="mt-1 truncate text-[22px] font-bold tracking-tight sm:text-[26px]">{formatDayLong(date)}</h1>
       </div>
-      <div className="flex shrink-0 items-center gap-1">
-        <Button variant="ghost" size="icon" aria-label="Previous day" onClick={() => onChange(addDays(date, -1))}>
+      <div className="flex shrink-0 items-center gap-1.5">
+        <Button variant="dashed" size="icon" aria-label="Previous day" onClick={() => onChange(addDays(date, -1))}>
           <ChevronLeft />
         </Button>
         {!isToday ? (
@@ -22,10 +22,10 @@ export function DayNavigator({ date, onChange }: { date: string; onChange: (d: s
             Today
           </Button>
         ) : null}
-        <Button variant="ghost" size="icon" aria-label="Next day" onClick={() => onChange(addDays(date, 1))}>
+        <Button variant="dashed" size="icon" aria-label="Next day" onClick={() => onChange(addDays(date, 1))}>
           <ChevronRight />
         </Button>
-        <label className="relative flex size-9 cursor-pointer items-center justify-center rounded-control text-muted hover:bg-subtle hover:text-text">
+        <label className="relative flex size-10 cursor-pointer items-center justify-center rounded-full bg-pill text-text hover:bg-pill-hover">
           <CalendarDays className="size-4" />
           <span className="sr-only">Pick a date</span>
           <input

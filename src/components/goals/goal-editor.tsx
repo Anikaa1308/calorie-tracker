@@ -119,7 +119,7 @@ export function GoalEditor({
       </div>
 
       {pending ? (
-        <div role="alertdialog" aria-label="Adjust other targets?" className="mt-4 rounded-panel border border-accent/40 bg-accent-soft/60 p-4">
+        <div role="alertdialog" aria-label="Adjust other targets?" className="mt-4 rounded-panel border border-butter bg-accent-soft/60 p-4">
           <p className="text-[13px] font-medium">
             {NUTRIENT_LABEL[pending.key]} → {pending.value} {pending.key === "calories" ? "kcal" : "g"}. What about the others?
           </p>

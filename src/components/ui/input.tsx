@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/cn";
 
 export const inputClass =
-  "h-10 w-full rounded-control border border-border bg-surface px-3 text-sm text-text placeholder:text-faint transition-colors focus:border-accent focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-accent/20 disabled:opacity-50 aria-invalid:border-danger";
+  "h-11 w-full rounded-control border-[1.5px] border-border bg-surface px-3.5 text-sm text-text placeholder:text-faint transition-colors focus:border-text/60 focus:outline-none focus-visible:outline-none focus:ring-4 focus:ring-butter/40 disabled:opacity-50 aria-invalid:border-danger";
 
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   ({ className, ...props }, ref) => <input ref={ref} className={cn(inputClass, className)} {...props} />,

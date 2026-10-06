@@ -191,7 +191,7 @@ export function RecipeBuilder({
         <Panel className="mt-3 p-5" aria-live="polite">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <p>
-              <span className="tabular text-[28px] font-semibold tracking-tight">{formatKcal(totals.perServing.calories)}</span>{" "}
+              <span className="tabular text-[28px] font-bold tracking-tight">{formatKcal(totals.perServing.calories)}</span>{" "}
               <span className="text-muted">kcal</span>
             </p>
             <p className="tabular text-xs text-muted">

@@ -96,7 +96,7 @@ export function QuantityPicker({
                 className={cn(
                   "tabular h-7 min-w-10 rounded-full border px-2.5 text-xs transition-colors",
                   active
-                    ? "border-accent bg-accent-soft text-text"
+                    ? "border-transparent bg-accent text-accent-contrast"
                     : "border-border text-muted hover:border-border-strong hover:text-text",
                 )}
               >

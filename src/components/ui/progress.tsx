@@ -8,7 +8,7 @@ export function ProgressBar({
   label,
   valueText,
   className,
-  height = 6,
+  height = 10,
 }: {
   value: number;
   max: number;

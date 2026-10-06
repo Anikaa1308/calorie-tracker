@@ -88,7 +88,7 @@ function Flow({ profile, onDone }: { profile: ReturnType<typeof useProfile>["dat
       <div className="mx-auto max-w-xl px-4 pb-16 sm:px-6">
         <div className="flex gap-1.5" aria-hidden>
           {STEPS.map((s, i) => (
-            <div key={s} className={`h-1 flex-1 rounded-full ${i <= step ? "bg-accent" : "bg-track"}`} />
+            <div key={s} className={`h-1.5 flex-1 rounded-full ${i <= step ? "bg-accent" : "bg-track"}`} />
           ))}
         </div>
 
@@ -102,7 +102,7 @@ function Flow({ profile, onDone }: { profile: ReturnType<typeof useProfile>["dat
         >
           {step === 0 ? (
             <section>
-              <h1 className="text-[24px] font-semibold tracking-tight">About you</h1>
+              <h1 className="text-[24px] font-bold tracking-tight">About you</h1>
               <p className="mt-1 text-[13px] text-muted">These four numbers estimate how much energy your body uses.</p>
               <div className="mt-6">
                 <BodyFields draft={body} onChange={setBody} showErrors={showErrors} />
@@ -110,7 +110,7 @@ function Flow({ profile, onDone }: { profile: ReturnType<typeof useProfile>["dat
             </section>
           ) : step === 1 ? (
             <section>
-              <h1 className="text-[24px] font-semibold tracking-tight">How active are you?</h1>
+              <h1 className="text-[24px] font-bold tracking-tight">How active are you?</h1>
               <p className="mt-1 text-[13px] text-muted">Think of a typical week, including work and exercise.</p>
               <div className="mt-6">
                 <ChoiceList
@@ -124,7 +124,7 @@ function Flow({ profile, onDone }: { profile: ReturnType<typeof useProfile>["dat
             </section>
           ) : step === 2 ? (
             <section>
-              <h1 className="text-[24px] font-semibold tracking-tight">What&apos;s your goal?</h1>
+              <h1 className="text-[24px] font-bold tracking-tight">What&apos;s your goal?</h1>
               <div className="mt-6">
                 <ChoiceList
                   ariaLabel="Goal"
@@ -152,22 +152,19 @@ function Flow({ profile, onDone }: { profile: ReturnType<typeof useProfile>["dat
             </section>
           ) : input && result ? (
             <section>
-              <h1 className="text-[24px] font-semibold tracking-tight">Your daily targets</h1>
+              <h1 className="text-[24px] font-bold tracking-tight">Your daily targets</h1>
               <p className="mt-1 text-[13px] text-muted">
                 An estimate to start from. You can change any of these later.
               </p>
               <div className="mt-6 rounded-panel border border-border bg-surface p-5">
-                <p className="tabular text-[40px] leading-none font-semibold tracking-tight">
+                <p className="tabular text-[40px] leading-none font-bold tracking-tight">
                   {formatKcal(result.calories)} <span className="text-base font-normal text-muted">kcal a day</span>
                 </p>
-                <dl className="mt-5 grid grid-cols-4 gap-3">
+                <dl className="mt-5 grid grid-cols-4 gap-2">
                   {(["protein", "carbs", "fat", "fiber"] as const).map((k) => (
-                    <div key={k}>
-                      <dt className="flex items-center gap-1.5 text-xs text-muted">
-                        <span className="size-2 rounded-full" style={{ background: MACRO_COLOR[k] }} />
-                        {k[0].toUpperCase() + k.slice(1)}
-                      </dt>
-                      <dd className="tabular mt-1 text-lg font-medium">{result[k]} g</dd>
+                    <div key={k} className="rounded-[18px] px-2.5 py-2.5 text-on-pastel" style={{ background: MACRO_COLOR[k] }}>
+                      <dt className="text-xs font-medium opacity-75">{k[0].toUpperCase() + k.slice(1)}</dt>
+                      <dd className="tabular mt-0.5 text-lg font-bold">{result[k]} g</dd>
                     </div>
                   ))}
                 </dl>
@@ -187,9 +184,8 @@ function Flow({ profile, onDone }: { profile: ReturnType<typeof useProfile>["dat
 
           <div className="mt-10 flex items-center justify-between">
             {step > 0 ? (
-              <Button variant="ghost" onClick={() => setStep((s) => s - 1)}>
+              <Button variant="dashed" size="icon" onClick={() => setStep((s) => s - 1)} aria-label="Back">
                 <ArrowLeft />
-                Back
               </Button>
             ) : (
               <span />

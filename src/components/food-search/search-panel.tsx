@@ -144,7 +144,7 @@ export function SearchPanel({
             onClick={() => setScanning((s) => !s)}
             aria-label="Scan a barcode"
             aria-pressed={scanning}
-            className="flex size-8 items-center justify-center rounded-control text-muted hover:bg-subtle hover:text-text aria-pressed:text-accent"
+            className="flex size-8 items-center justify-center rounded-full text-muted hover:bg-pill hover:text-text aria-pressed:bg-butter aria-pressed:text-on-pastel"
           >
             <ScanBarcode className="size-4" />
           </button>

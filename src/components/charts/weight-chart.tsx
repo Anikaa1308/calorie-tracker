@@ -50,8 +50,8 @@ export function WeightChart({ entries, unit }: { entries: WeightEntry[]; unit: "
             strokeWidth={2}
             strokeLinejoin="round"
             strokeLinecap="round"
-            dot={{ r: 4, fill: "var(--accent)", stroke: "var(--surface)", strokeWidth: 2 }}
-            activeDot={{ r: 5, fill: "var(--accent)", stroke: "var(--surface)", strokeWidth: 2 }}
+            dot={{ r: 5, fill: "var(--periwinkle)", stroke: "var(--accent)", strokeWidth: 1.5 }}
+            activeDot={{ r: 6, fill: "var(--periwinkle)", stroke: "var(--accent)", strokeWidth: 1.5 }}
             isAnimationActive={false}
           />
         </LineChart>

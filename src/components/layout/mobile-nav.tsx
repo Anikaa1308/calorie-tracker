@@ -21,11 +21,18 @@ function Item({ href, label, icon: Icon, active }: { href: string; label: string
       href={href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex flex-1 flex-col items-center justify-center gap-0.5 pt-2 pb-1.5 text-[11px] transition-colors",
+        "flex flex-1 flex-col items-center justify-center gap-0.5 pt-2 pb-1.5 text-[11px] font-medium transition-colors",
         active ? "text-text" : "text-faint",
       )}
     >
-      <Icon className="size-5" strokeWidth={active ? 2 : 1.6} />
+      <span
+        className={cn(
+          "flex h-7 w-11 items-center justify-center rounded-full transition-colors",
+          active && "bg-butter text-on-pastel",
+        )}
+      >
+        <Icon className="size-[18px]" strokeWidth={active ? 2 : 1.6} />
+      </span>
       {label}
     </Link>
   );
@@ -38,7 +45,7 @@ export function MobileNav() {
   return (
     <nav
       aria-label="Main"
-      className="pb-safe fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface/95 backdrop-blur lg:hidden"
+      className="pb-safe fixed inset-x-0 bottom-0 z-30 border-t border-border/70 bg-bg/95 backdrop-blur lg:hidden"
     >
       <div className="mx-auto flex max-w-md items-stretch">
         {LEFT.map((i) => (
@@ -49,7 +56,7 @@ export function MobileNav() {
             type="button"
             onClick={() => openAddFood()}
             aria-label="Add food"
-            className="flex size-11 items-center justify-center rounded-full bg-accent text-accent-contrast transition-transform active:scale-95"
+            className="flex h-11 w-14 items-center justify-center rounded-full bg-accent text-accent-contrast shadow-float transition-transform active:scale-95"
           >
             <Plus className="size-5" strokeWidth={2.25} />
           </button>
